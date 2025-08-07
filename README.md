@@ -206,12 +206,12 @@ kubectl exec -it $(kubectl get pods -l app=ollama -o jsonpath='{.items[0].metada
 <p>
 C. Upload the files (python files) to the RAGpython pod
 
-<a href="scripts/sample.txt">sample.txt</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/sample.txt">sample.txt</a>
 ```
 kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 
 ```
-<a href="scripts/chromadb-example1.py">chromadb-example1.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a>
 
 Explanation: the file chromadb-example1.py consist of:
 
@@ -231,7 +231,7 @@ When a client query is received, it is first embedded. Then, a similarity search
 kubectl cp chromadb-example1.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example1.py
 ```
-<a href="scripts/chromadb-example2.py">chromadb-example2.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a>
 
 <b>Step 1: Input an Array of Text</b><br>
 <p>A class is defined to accept an array of text documents as input. The output is also an array of text, typically retrieved as search results.</p>
@@ -255,7 +255,7 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 kubectl cp chromadb-example2.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example2.py
 ```
-<a href="scripts/chromadb-example3.py">chromadb-example3.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example3.py">chromadb-example3.py</a>
 
 <b>Step 1: Define custom embedding_function</b><br>
 <p>A class is defined to accept an array of text documents as input. The output is also an array of text, typically retrieved as search results.</p>
