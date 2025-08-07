@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragpython
+  labels:
+    app: ragpython
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ragpython
+  template:
+    metadata:
+      labels:
+        app: ragpython
+    spec:
+      containers:
+      - name: ollama-llm-ui
+        image: alaasalmo/ragpython:0.0.1.0
+        ports:
+        - containerPort: 8040
+        env:
+        - name: OLLAMA_URL
+          value: "http://ollama-service-internal:11434"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        volumeMounts:
+        - mountPath: /app/rag
+          name: ragpython-storage
+      volumes:
+      - name: ragpython-storage
+        persistentVolumeClaim:
+          claimName: ragpython-pvc-claim

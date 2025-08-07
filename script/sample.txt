@@ -1,0 +1,4 @@
+Artificial intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think and learn. AI is widely used in fields such as natural language processing, robotics, and computer vision.
+Machine learning (ML), a subset of AI, enables computers to learn from data without being explicitly programmed. It relies heavily on statistical techniques and is used in applications like spam filtering, recommendation systems, and fraud detection.
+Deep learning, a subset of machine learning, uses neural networks with many layers. It powers technologies such as voice assistants, image recognition, and autonomous vehicles.
+While AI offers numerous benefits, it also raises concerns around privacy, job displacement, and decision transparency. Ethical considerations are important as AI becomes more integrated into society.
