@@ -212,7 +212,8 @@ kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0
 
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a>
-Embeded method:</b> ollama.embeddings (Ollama)
+
+<b>Embeded method:</b> ollama.embeddings (Ollama)
 
 <br>Explanation: the file chromadb-example1.py consist of:
 
@@ -233,7 +234,8 @@ kubectl cp chromadb-example1.py $(kubectl get pods -l app=ragpython -o jsonpath=
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example1.py
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a>
-Embeded method:</b> ollama.embeddings (Ollama)
+
+<b>Embeded method:</b> ollama.embeddings (Ollama)
 
 Explanation: the file chromadb-example2.py consist of:
 
