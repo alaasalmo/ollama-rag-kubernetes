@@ -215,7 +215,7 @@ kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0
 
 <b>Embeded method:</b> ollama.embeddings (Ollama)
 
-<br>Explanation: the file chromadb-example1.py consist of:
+Explanation: the file chromadb-example1.py consist of:
 
 <b>Step 1: Read and Chunk the File</b><br>
 Read the file line by line. Each line is divided into chunks based on a predefined chunk size. To preserve context between chunks, an overlap is added based on the previous chunk.
