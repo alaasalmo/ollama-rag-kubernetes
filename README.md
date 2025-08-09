@@ -213,6 +213,7 @@ kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a>
 
+<b>Embeded method:</b> ollama.embeddings (Ollama)
 Explanation: the file chromadb-example1.py consist of:
 
 <b>Step 1: Read and Chunk the File</b><br>
@@ -232,6 +233,8 @@ kubectl cp chromadb-example1.py $(kubectl get pods -l app=ragpython -o jsonpath=
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example1.py
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a>
+
+<b>Embeded method:</b> ollama.embeddings (Ollama)
 
 <b>Step 1: Input an Array of Text</b><br>
 <p>A class is defined to accept an array of text documents as input. The output is also an array of text, typically retrieved as search results.</p>
@@ -256,6 +259,8 @@ kubectl cp chromadb-example2.py $(kubectl get pods -l app=ragpython -o jsonpath=
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example2.py
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example3.py">chromadb-example3.py</a>
+
+<b>Embeded method:</b> ollama.embeddings (Ollama)
 
 <b>Step 1: Define custom embedding_function</b><br>
 <p>A class is defined to accept an array of text documents as input. The output is also an array of text, typically retrieved as search results.</p>
@@ -283,6 +288,23 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 ```
 </p>
 <p>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example4.py">chromadb-example4.py</a>
+
+<b>Embeded method:</b> chromadb.utils embedding_functions (Chroma DB) 
+
+<b>Step 1: Create a custom embedding function for Ollama</b>
+<br><b>Step 2: Create ChromaDB client</b>
+<br><b>Step 3: Initialize our Ollama embedding function</b>
+<br><b>Step 4: Create collection</b>
+<br><b>Step 5: Add documents</b>
+<br><b>Step 6: Query the database with Ollama</b>
+
+```
+kubectl cp chromadb-example4.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
+kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example4.py
+```
+</p>
+<p>
 D. Run the scripts for python in the pod
 
 ```
@@ -295,6 +317,8 @@ python chromadb-example1.py
 python chromadb-example2.py
 
 python chromadb-example3.py
+
+python chromadb-example4.py
 ```
 </p>
 </div>
