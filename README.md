@@ -1,17 +1,17 @@
 <div style="background-color: white; color: black; padding: 20px;">
-<p><centr>Using RAG(Retrieval-Augmented Generation) with Ollama</center></p>
+<p><centr><font size="14">Using RAG(Retrieval-Augmented Generation) with Ollama</font></center></p>
 
 <p align="center"><img src="img/rag-ollama.png"></p>
 
-#### 1- Introduction into Retrieval-Augmented Generation (RAG)
+### 1- Introduction into Retrieval-Augmented Generation (RAG)
 <p>RAG (Retrieval-Augmented Generation) is a powerful and modern AI architecture designed to extend the knowledge base of an application in order to answer user queries more accurately. </p>
 <p>RAG consists of two main components: retrieval and generation.</p>
 <p>Retrieval involves searching for relevant information from a vector database that we have previously built using various documents.
 Generation uses the retrieved knowledge to generate a response. This process involves transforming documents into chunks, storing them in a vector database, and then sending relevant chunks to an LLM (e.g., Ollama) to produce accurate and context-aware answers.</p>
-<p>In this post, we will use ChromaDB as the vector database. For embedding (i.e., preparing document chunks for the vector database), we will use Ollama's embedding capabilities. We will also mention alternative techniques for vector databases and embedding processes.</p>
-<p>Finally, the post will demonstrate how to implement the RAG pipeline within a Kubernetes environment.</p>
+<p>In this article, we will use ChromaDB as the vector database. For embedding (i.e., preparing document chunks for the vector database), we will use Ollama's embedding capabilities. We will also mention alternative techniques for vector databases and embedding processes.</p>
+<p>Finally, the article will demonstrate how to implement the RAG pipeline within a Kubernetes environment.</p>
      
-#### 2- Integration between knowledge base and Ollama in RAG
+### 2- Integration between knowledge base and Ollama in RAG
 <p>
    Integration between a knowledge base (KB) and Ollama in a RAG (Retrieval-Augmented Generation) pipeline means combining external factual content (the KB) with LLM generation (via Ollama) to produce accurate, grounded responses.
 </p>
@@ -32,14 +32,104 @@ Generation uses the retrieved knowledge to generate a response. This process inv
 In our post, we will use the Ollama embedding to simplify the implementation and provide three examples to provide the full understangin
 </p>
 
-##### 3- Our implemenation in the post 
-   <p>In our post, we will use the main three components Ollama, ChrmomaDB and python.
+### 4- Types of RAG depending on implementatiom
+   <p>
+   <b>RAG</b> (Retrieval-Augmented Generation) can be implemented in two main ways: <b>Naive RAG</b> and <b>Advanced RAG</b>, each with different features and implementation complexity.
+
+<b>Naive RAG</b> is the standard approach to RAG implementation. It retrieves relevant documents based on the original query and passes them directly to the model without additional processing.
+
+<b>Advanced RAG</b>, on the other hand, involves additional processing steps to refine the query and improve retrieval accuracy. This approach requires more processing time to reconstruct the client request (query) but generally produces more accurate results. Advanced RAG often incorporates techniques such as query rewriting, query expansion, re-ranking, and context summarization.
+
+In our case:
+
+The final script in our repository represents an Advanced RAG implementation.
+
+The other scripts are Naive RAG implementations.
+
+For Advanced RAG, there are two primary ways to improve the query:
+
+Query rewriting – reformulating the original query to make it clearer and more effective for retrieval.
+
+Query expansion – generating multiple related queries from the original one to cover a broader range of relevant information.
+
+Between the two, query expansion generally yields more accurate results than query rewriting. 
+<table>
+  <tr style="background-color:white;">
+    <td><b>Feature</b></td>
+    <td><b>Naive RAG</b></td>
+    <td><b>Advanced RAG</b></td>
+  </tr>
+  <tr style="background-color:white;">
+    <th>Query Handling</th>
+    <td>Direct user query</td>
+    <td>Query rewriting / expansion</td>
+  </tr>
+  <tr style="background-color:white;">
+    <th>Retrieval</th>
+    <td>Top-k similarity</td>
+    <td>Hybrid search, metadata filters</td>
+  </tr>
+  <tr style="background-color:white;">
+    <th>Context</th>
+    <td>All retrieved chunks dumped</td>
+    <td>Re-ranked, deduped, summarized</td>
+  </tr>
+  <tr style="background-color:white;">
+    <th>Hallucination</th>
+    <td>Risk Higher</td>
+    <td>Risk Lower</td>
+  </tr>
+    <tr style="background-color:white;">
+    <th>Token Efficiency</th>
+    <td>Poor</td>
+    <td>Optimized</td>
+  </tr>
+    </tr>
+    <tr style="background-color:white;">
+    <th>Complexity</th>
+    <td>Low</td>
+    <td>Higher</td>
+  </tr>
+</table>
+
+<b>The main steps for Advanced RAG</b>
+
+1- Ingestion & indexing (ChromaDB)<br>
+Chunk your docs → embed chunks → upsert into a ChromaDB collection with metadata (source, page, section, etc.).<br>
+2- Query processing<br>
+Either rewrite the query for clarity or do query expansion (generate several semantically-related queries).<br>
+3- Retrieval from ChromaDB<br>
+4- Re-ranking (vs. original query)<br>
+Score retrieved chunks against the original user query (e.g., cross-encoder, LLM scoring, or a lightweight cosine pass).<br>
+5-Context summarization<br>
+Compress top-K chunks to fit your model’s context window (map-reduce summary or extractive compression).<br>
+6-Generation<br>
+Feed the summarized context to the LLM to produce the final answer.<br>
+
+### 5- Our implemenation in the post 
+   <p>In our article, we will use the main three components Ollama, ChrmomaDB and python.
    <b>Ollama:</b> The platform for LLM. 
    <b>ChromaDB:</b> The vector database is using to keep the documents (after we divide the document to chuncks and embeding process. After that we can save it in the Chroma Database)
    <b>Python:</b> In this component, we have two scripts, the first script is to process to upload the documents to the Chroma Database. The second script is request query and get the output result     
    <p align="center"><img src="img/RAG-diagram.jpg"></p> 
 
-##### 4- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
+### 6- Vector database
+<p>
+A vector database is a storage system for document chunks after they’ve been converted into embeddings.
+When a query is made, the system searches the database for the most relevant chunk using a distance metric, such as:
+
+Cosine similarity – most common for embeddings
+
+Euclidean distance (L2)
+
+Dot product
+
+In this article, we use ChromaDB as our vector database.
+Other high-performance options include Milvus and Redis, both of which can run on Kubernetes for scalability.
+We chose ChromaDB for its simplicity and ease of integration, making it ideal for our example.
+</p>
+
+### 7- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
 <p align="center"><img src="img/RAG_system.png"></p>
 <p>
 <b>A. Scalability</b><br>
@@ -61,12 +151,12 @@ By deploying Ollama and the RAG pipeline on Kubernetes, you can run the entire s
 Kubernetes allows you to isolate environments easily. You can run multiple, independent instances of the full RAG pipeline (Ollama + vector DB + frontend) per department or team. This enables departmental autonomy while keeping data and processing pipelines securely separated.
 </p>
 
-#### 5- The benefit of adding RAG to Ollama: 
+### 8- The benefit of adding RAG to Ollama: 
 <p>Integrating RAG (Retrieval-Augmented Generation) with Ollama significantly enhances its capabilities by bridging the gap between the LLM's pretrained knowledge and your organization’s private, recent, or domain-specific data.</P>
 
 <p>In many cases, company policies or security regulations prevent connecting LLMs to external cloud-based APIs. Additionally, even the most advanced LLMs cannot cover all topics or remain fully up to date. This is where RAG becomes essential — it allows Ollama to retrieve relevant, real-time or proprietary knowledge from internal sources, enabling the model to generate accurate and context-aware responses based on the latest and most relevant information. </p> 
    
-#### 6- Using Vector database in the RAG: 
+### 9- Using Vector database in the RAG: 
 <p>
 The vector database plays a central role in building an effective RAG (Retrieval-Augmented Generation) pipeline. It stores documents as numerical vector embeddings—mathematical representations of text—allowing the system to perform fast and accurate semantic searches.
 </P>
@@ -77,7 +167,7 @@ When a user or system submits a query, it is also converted into a vector. The v
 One common method is Euclidean distance, which measures the straight-line distance between vectors in the embedding space. Compared to traditional keyword-based text search, vector similarity search is significantly faster and more accurate when working with embedded data, especially for understanding meaning and context.
 </p>
 
-##### 7- Build docker and implement them on Kubernetes:
+### 10- Build docker and implement them on Kubernetes:
 
 <p>As mention above that we will have three components. In thid post we will deal with three dockers. After that we will implement the three components on Minikuebe (Kubernetes)
 
@@ -190,7 +280,7 @@ kubectl apply -f ragpython-service.yaml
 ```
 </p>
 
-##### 8- Review the scripts and upload the script files to the RAGpython
+##### 10- Review the scripts and upload the script files to the RAGpython
 <p>
 A. Run the pods to check the three pods 
 
@@ -211,7 +301,7 @@ C. Upload the files (python files) to the RAGpython pod
 kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 
 ```
-<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a> <b>(Naive RAG implementation)</b>
 
 <b>Embeded method:</b> ollama.embeddings (Ollama)
 
@@ -233,7 +323,7 @@ When a client query is received, it is first embedded. Then, a similarity search
 kubectl cp chromadb-example1.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example1.py
 ```
-<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a> <b>(Naive RAG implementation)</b>
 
 <b>Embeded method:</b> ollama.embeddings (Ollama)
 
@@ -261,7 +351,7 @@ Explanation: the file chromadb-example2.py consist of:
 kubectl cp chromadb-example2.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example2.py
 ```
-<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example3.py">chromadb-example3.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example3.py">chromadb-example3.py</a> <b>(Naive RAG implementation)</b>
 
 <b>Embeded method:</b> ollama.embeddings (Ollama)
 
@@ -293,7 +383,7 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 ```
 </p>
 <p>
-<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example4.py">chromadb-example4.py</a>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example4.py">chromadb-example4.py</a> <b>(Naive RAG implementation)</b>
 
 <b>Embeded method:</b> chromadb.utils embedding_functions (Chroma DB) 
 
@@ -311,6 +401,80 @@ kubectl cp chromadb-example4.py $(kubectl get pods -l app=ragpython -o jsonpath=
 kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example4.py
 ```
 </p>
+
+<p>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example5.py">chromadb-example5.py</a> <b>(Naive RAG implementation)</b>
+
+<b>Step 1: Create custom embedding function for Ollama</b>  ollama.embeddings (Ollama)<br>
+<b>Step 2: Create ChromaDB client</b><br>
+<b>Step 3: Initialize embedding function</b><br>
+<b>Step 4: Create collection</b><br>
+<b>Step 5: Add documents (Array)</b><br>
+<b>Step 6: Query (get result from query)</b><br>
+```
+kubectl cp chromadb-example5.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
+kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example5.py
+```
+</p>
+<p>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/advanced-rag-example6.py">advanced-rag-example6.py</a> <b>(Advanced RAG implementation)</b>
+
+Advanced RAG through rewrite query
+
+<b>Step 1: Call Ollama embedding API</b><br>
+<b>Step 2: Call Ollama chat API</b><br>
+<b>Step 3: Chunk text (simple no-overlap)</b><br>
+<b>Step 4: Initialize Chroma client</b><br>
+<b>Step 5: Upsert chunks + embeddings</b><br>
+<b>Step 6: Query rewriting </b><br>
+<b>Step 7: Retrieve top-k chunks</b><br>
+<b>Step 8 Re-rank retrieved chunks</b><br>
+<b>Step 9: Summarize context</b><br>
+<b>Step 10: Generate final answer</b><br>
+```
+kubectl cp chromadb-example6.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
+kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/chromadb-example6.py
+```
+</p>
+<p>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/advanced-rag-example-simple7.py">advanced-rag-example-simple7.py</a> <b>(Advanced RAG implementation)</b>
+
+Advanced RAG through expansion queries
+
+<b>Step 1: Call Ollama embedding API</b><br>
+<b>Step 2: Ask to genearate expanded queries</b><br> 
+<b>Step 3: Return list of expanded queries</b><br>
+
+```
+kubectl cp advanced-rag-example-simple7.p $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
+kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/advanced-rag-example-simple7.p
+```
+
+</p>
+<p>
+<a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/advanced-rag-example8.py">advanced-rag-example8.py</a> <b>(Advanced RAG implementation)</b>
+
+Advanced RAG through rewrite query
+
+<b>Step 1: Call Ollama embedding API</b><br>
+<b>Step 2: Call Ollama chat API</b><br>
+<b>Step 3: Chunk text</b><br>
+<b>Step 4: Initialize Chroma client</b><br>
+<b>Step 5 Upsert chunks + embeddings</b><br>
+<b>Step 6: Multi-query expansion</b><br>
+<b>Step 7: Retrieve top-k chunks for multiple queries</b><br>
+<b>Step 8: Re-rank retrieved chunks</b><br>
+<b>Step 9: Summarize context</b><br>
+<b>Step 10: Generate final answer</b><br>
+
+```
+kubectl cp advanced-rag-example8.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
+kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}') -- python /app/rag/advanced-rag-example8.py
+```
+
+
+</p>
+
 <p>
 D. Run the scripts for python in the pod
 
@@ -326,6 +490,16 @@ python chromadb-example2.py
 python chromadb-example3.py
 
 python chromadb-example4.py
+
+python chromadb-example5.py
+
+python advanced-rag-example6.py
+
+python advanced-rag-example-simple7.py
+
+python advanced-rag-example8.py
+
+
 ```
 </p>
 </div>
