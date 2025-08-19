@@ -40,19 +40,13 @@ In our post, we will use the Ollama embedding to simplify the implementation and
 
 <b>Advanced RAG</b>, on the other hand, involves additional processing steps to refine the query and improve retrieval accuracy. This approach requires more processing time to reconstruct the client request (query) but generally produces more accurate results. Advanced RAG often incorporates techniques such as query rewriting, query expansion, re-ranking, and context summarization.
 
-In our case:
-
-The final script in our repository represents an Advanced RAG implementation.
-
-The other scripts are Naive RAG implementations.
-
-For Advanced RAG, there are two primary ways to improve the query:
+In our  python example script files: We will have example of Niave RAG and advanaced RAG.
+The final script in our repository represents an Advanced RAG implementation. For Advanced RAG, there are two primary ways to improve the query:
 
 Query rewriting – reformulating the original query to make it clearer and more effective for retrieval.
-
 Query expansion – generating multiple related queries from the original one to cover a broader range of relevant information.
 
-Between the two, query expansion generally yields more accurate results than query rewriting. 
+from query rewriting and query expanasion, the query expansion generally yields more accurate results than query rewriting. 
 <table>
   <tr style="background-color:white;">
     <td><b>Feature</b></td>
@@ -118,15 +112,12 @@ Feed the summarized context to the LLM to produce the final answer.<br>
 A vector database is a storage system for document chunks after they’ve been converted into embeddings.
 When a query is made, the system searches the database for the most relevant chunk using a distance metric, such as:
 
-Cosine similarity – most common for embeddings
-
-Euclidean distance (L2)
-
-Dot product
+Cosine similarity – most common for embeddings <br>
+Euclidean distance (L2)<br>
+Dot product<br>
 
 In this article, we use ChromaDB as our vector database.
-Other high-performance options include Milvus and Redis, both of which can run on Kubernetes for scalability.
-We chose ChromaDB for its simplicity and ease of integration, making it ideal for our example.
+Other high-performance options include Milvus and Redis, both of which can run on Kubernetes for scalability. We choose ChromaDB for its simplicity and ease of integration, making it ideal for our example.
 </p>
 
 ### 7- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
