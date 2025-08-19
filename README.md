@@ -1,7 +1,7 @@
 <div style="background-color: white; color: black; padding: 20px;">
 <p><centr><font size="14">Using RAG(Retrieval-Augmented Generation) with Ollama</font></center></p>
 
-<p align="center"><img src="img/rag-ollama.png"></p>
+<p align="center"><img src="img/rag-main.png"></p>
 
 ### 1- Introduction into Retrieval-Augmented Generation (RAG)
 <p>RAG (Retrieval-Augmented Generation) is a powerful and modern AI architecture designed to extend the knowledge base of an application in order to answer user queries more accurately. </p>
@@ -130,7 +130,7 @@ We chose ChromaDB for its simplicity and ease of integration, making it ideal fo
 </p>
 
 ### 7- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
-<p align="center"><img src="img/RAG_system.png"></p>
+<p align="center"><img src="img/RAG_system.jpg"></p>
 <p>
 <b>A. Scalability</b><br>
 Kubernetes enables you to independently scale each component of the RAG pipeline (e.g., Ollama, embedding service, vector database) based on demand. This ensures higher performance and reliability as workloads increase.
@@ -463,7 +463,7 @@ Advanced RAG through rewrite query
 <b>Step 5 Upsert chunks + embeddings</b><br>
 <b>Step 6: Multi-query expansion</b><br>
 <b>Step 7: Retrieve top-k chunks for multiple queries</b><br>
-<b>Step 8: Re-rank retrieved chunks</b><br>
+<b>Step 8: Re-rank retrieved chunks</b><br> (Cross-Encoder). We are going to use offline re-rank and avoid using Cohere re-ranking because it's online. It's called local Cross-Encoder reranker using Ollama 
 <b>Step 9: Summarize context</b><br>
 <b>Step 10: Generate final answer</b><br>
 
