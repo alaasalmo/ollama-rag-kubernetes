@@ -1,7 +1,7 @@
 <div style="background-color: white; color: black; padding: 20px;">
-<p><centr><font size="14">Using RAG(Retrieval-Augmented Generation) with Ollama</font></center></p>
+<p><center><font size="14">RAG(Retrieval-Augmented Generation) with Ollama on Kubernates</font></center></p>
 
-<p align="center"><img src="img/rag-main.png"></p>
+<p align="center"><img src="img/rag-main22.jpg"></p>
 
 ### 1- Introduction into Retrieval-Augmented Generation (RAG)
 <p>RAG (Retrieval-Augmented Generation) is a powerful and modern AI architecture designed to extend the knowledge base of an application in order to answer user queries more accurately. </p>
@@ -11,28 +11,60 @@ Generation uses the retrieved knowledge to generate a response. This process inv
 <p>In this article, we will use ChromaDB as the vector database. For embedding (i.e., preparing document chunks for the vector database), we will use Ollama's embedding capabilities. We will also mention alternative techniques for vector databases and embedding processes.</p>
 <p>Finally, the article will demonstrate how to implement the RAG pipeline within a Kubernetes environment.</p>
      
-### 2- Integration between knowledge base and Ollama in RAG
-<p>
-   Integration between a knowledge base (KB) and Ollama in a RAG (Retrieval-Augmented Generation) pipeline means combining external factual content (the KB) with LLM generation (via Ollama) to produce accurate, grounded responses.
-</p>
-   As we mention about RAG, we need to build our knowldge base to use with LLM. Build the knowledge base through Generation process.    
-<p>   
-   <b>The process of  Genaration</b> 
-   A. Read the files or PDF 
-   B. Divide the text/PDF file to chunks 
-   C. Embedding: Convert text chunks into dense vectors using an embedding model
-      The embeding models are different depennding on LLM models that uses with Ollama or OpenAI:
-      - Ollama like llama3:embedding
-      - OpenAI for cloud and online applications
-</p>
-<p>
-    <b>The process of Querying the request to get the result from Ollama (LLM)</b>
-</p>  
-<p>
-In our post, we will use the Ollama embedding to simplify the implementation and provide three examples to provide the full understangin
-</p>
+### 2- Integration of Knowledge Bases with Ollama in a RAG Pipeline
 
-### 4- Types of RAG depending on implementatiom
+<b>Concept of RAG (Retrieval-Augmented Generation) with LLM:</b><br>
+RAG integrates a knowledge base (KB) with a Large Language Model (LLM) to generate accurate, grounded, and context-aware answers. The KB provides factual content, while the LLM (e.g., via Ollama) handles reasoning and natural language generation.
+
+<b>A. Knowledge Base Construction (Generation Pipeline)</b><br>
+This step builds the knowledge base that the LLM can reference later.<br>
+<b>Steps:</b><br>
+<p><b>Firt: Read and Ingest Documents</b><br>
+Import data from files, PDFs, or other sources.<br></p>
+<p><b>Second:Chunking</b><br>
+Split documents into smaller, semantically meaningful chunks (e.g., paragraphs or fixed-length tokens). <br>
+Chunking ensures embeddings capture local context without exceeding model token limits.</p>
+<p><b>Third:Embedding Generation</b><br>
+Convert each text chunk into a dense vector representation using an embedding model.<br>
+Choice of embedding model depends on the LLM setup:<br>
+Ollama (local) → e.g., llama3:embedding<br> 
+OpenAI (cloud) → e.g., text-embedding-3-small or text-embedding-3-large
+</p>
+<p><b>Fourth:Vector Database Storage</b><br>
+Store embeddings (with their text chunks as metadata) in a vector database for efficient similarity search.<br>
+Example: ChromaDB, Radis stack and Milvus. These databases work with Kubernetes</p>
+
+
+<b>B. Retrieval-Augmented Querying (Retrieval Pipeline)</b><br>
+This step runs when a client asks a question.<br>
+
+<b>Steps:</b><br>
+
+<p><b>First:Query Input</b><br>
+The user submits a question.
+</p>
+<p><b>Second:Query Embedding</b><br>
+Convert the query into an embedding vector using the same embedding model used during KB construction.
+</p>
+<p>
+<b>Third:Similarity Search</b><br>
+Compare the query embedding with stored embeddings in the vector database.<br>
+Retrieve the most relevant chunks (top-k matches).<br>
+Augmented Prompt Construction<br>
+Combine the original query with retrieved chunks to create a context-rich prompt.
+</p>
+<p>
+<b>Fourth:LLM Response Generation</b><br>
+Send the prompt to the LLM (via Ollama or OpenAI).The LLM uses the external knowledge from retrieved chunks to produce an accurate, grounded answer.</p>
+<p>
+In our post, we will use the Ollama embedding to simplify the implementation and provide examples to provide the full understanding
+</p>
+<p>The diagram below explain the two pipelines (Generation Pipeline & Retrieval Pipeline)</p>
+
+<p align="center"><img src="img/RAG-Diagram-piplines.jpg"></p>
+
+
+### 3- Types of RAG depending on implementatiom
    <p>
    <b>RAG</b> (Retrieval-Augmented Generation) can be implemented in two main ways: <b>Naive RAG</b> and <b>Advanced RAG</b>, each with different features and implementation complexity.
 
@@ -100,14 +132,14 @@ Compress top-K chunks to fit your model’s context window (map-reduce summary o
 6-Generation<br>
 Feed the summarized context to the LLM to produce the final answer.<br>
 
-### 5- Our implemenation in the post 
+### 4- Our implemenation in the post 
    <p>In our article, we will use the main three components Ollama, ChrmomaDB and python.
    <b>Ollama:</b> The platform for LLM. 
    <b>ChromaDB:</b> The vector database is using to keep the documents (after we divide the document to chuncks and embeding process. After that we can save it in the Chroma Database)
    <b>Python:</b> In this component, we have two scripts, the first script is to process to upload the documents to the Chroma Database. The second script is request query and get the output result     
    <p align="center"><img src="img/RAG-diagram.jpg"></p> 
 
-### 6- Vector database
+### 5- Vector database
 <p>
 A vector database is a storage system for document chunks after they’ve been converted into embeddings.
 When a query is made, the system searches the database for the most relevant chunk using a distance metric, such as:
@@ -120,7 +152,7 @@ In this article, we use ChromaDB as our vector database.
 Other high-performance options include Milvus and Redis, both of which can run on Kubernetes for scalability. We choose ChromaDB for its simplicity and ease of integration, making it ideal for our example.
 </p>
 
-### 7- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
+### 6- Impelemntation of RAG with Ollama on Kubernetes (MiniKube)
 <p align="center"><img src="img/RAG_system.jpg"></p>
 <p>
 <b>A. Scalability</b><br>
@@ -142,12 +174,12 @@ By deploying Ollama and the RAG pipeline on Kubernetes, you can run the entire s
 Kubernetes allows you to isolate environments easily. You can run multiple, independent instances of the full RAG pipeline (Ollama + vector DB + frontend) per department or team. This enables departmental autonomy while keeping data and processing pipelines securely separated.
 </p>
 
-### 8- The benefit of adding RAG to Ollama: 
+### 7- The benefit of adding RAG to Ollama: 
 <p>Integrating RAG (Retrieval-Augmented Generation) with Ollama significantly enhances its capabilities by bridging the gap between the LLM's pretrained knowledge and your organization’s private, recent, or domain-specific data.</P>
 
 <p>In many cases, company policies or security regulations prevent connecting LLMs to external cloud-based APIs. Additionally, even the most advanced LLMs cannot cover all topics or remain fully up to date. This is where RAG becomes essential — it allows Ollama to retrieve relevant, real-time or proprietary knowledge from internal sources, enabling the model to generate accurate and context-aware responses based on the latest and most relevant information. </p> 
    
-### 9- Using Vector database in the RAG: 
+### 8- Using Vector database in the RAG: 
 <p>
 The vector database plays a central role in building an effective RAG (Retrieval-Augmented Generation) pipeline. It stores documents as numerical vector embeddings—mathematical representations of text—allowing the system to perform fast and accurate semantic searches.
 </P>
@@ -158,7 +190,7 @@ When a user or system submits a query, it is also converted into a vector. The v
 One common method is Euclidean distance, which measures the straight-line distance between vectors in the embedding space. Compared to traditional keyword-based text search, vector similarity search is significantly faster and more accurate when working with embedded data, especially for understanding meaning and context.
 </p>
 
-### 10- Build docker and implement them on Kubernetes:
+### 9- Build docker and implement them on Kubernetes:
 
 <p>As mention above that we will have three components. In thid post we will deal with three dockers. After that we will implement the three components on Minikuebe (Kubernetes)
 
