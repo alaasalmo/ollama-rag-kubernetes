@@ -251,7 +251,7 @@ docker push alaasalmo/ragpython:1.0.0.0
 <p>
 <b>A. Build Ollama pod </b>
 
-In the our previos post, we built the Ollama docker <a href="https://github.com/alaasalmo/ollama-kubernetes/tree/main/ollama">Build Ollama docker</a>
+In the our previous article, we built the Ollama docker <a href="https://github.com/alaasalmo/ollama-kubernetes/tree/main/ollama">Build Ollama docker</a>
 
 ```
 minikube ssh
