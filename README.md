@@ -329,7 +329,7 @@ kubectl cp sample.txt $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example1.py">chromadb-example1.py</a> <b>(Naive RAG implementation)</b>
 
-<b>Embeded method:</b> ollama.embeddings (Ollama)
+<b>Embedded method:</b> ollama.embeddings (Ollama)
 
 Explanation: the file chromadb-example1.py consist of:
 
@@ -351,7 +351,7 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 ```
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example2.py">chromadb-example2.py</a> <b>(Naive RAG implementation)</b>
 
-<b>Embeded method:</b> ollama.embeddings (Ollama)
+<b>Embedded method:</b> ollama.embeddings (Ollama)
 
 Explanation: the file chromadb-example2.py consist of:
 
@@ -401,7 +401,7 @@ The system automatically embeds the query and compares it with the stored docume
 <b>Step 7: Chat-based answer generation using LLM</b><br>
 <p>We have to setup the role of system and user to use them in the next step for chatting</p> 
 <b>Step 8: Call LLM with chat</b><br>
-<p>The client asks another question depending on chatting and the system will answer depengin on previous questions</p>
+<p>The client asks another question depending on chatting and the system will answer depending on previous questions</p>
 
 ```
 kubectl cp chromadb-example3.py $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].metadata.name}'):/app/rag/
@@ -431,6 +431,8 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 <p>
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/chromadb-example5.py">chromadb-example5.py</a> <b>(Naive RAG implementation)</b>
 
+Explanation: the file chromadb-example5.py consist of:
+
 <b>Step 1: Create custom embedding function for Ollama</b>  ollama.embeddings (Ollama)<br>
 <b>Step 2: Create ChromaDB client</b><br>
 <b>Step 3: Initialize embedding function</b><br>
@@ -446,6 +448,8 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/advanced-rag-example6.py">advanced-rag-example6.py</a> <b>(Advanced RAG implementation)</b>
 
 Advanced RAG through rewrite query
+
+Explanation: the file advanced-rag-example6.py consist of:
 
 <b>Step 1: Call Ollama embedding API</b><br>
 <b>Step 2: Call Ollama chat API</b><br>
@@ -467,6 +471,8 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 
 Advanced RAG through expansion queries
 
+Explanation: the file dvanced-rag-example-simple7.py consist of:
+
 <b>Step 1: Call Ollama embedding API</b><br>
 <b>Step 2: Ask to genearate expanded queries</b><br> 
 <b>Step 3: Return list of expanded queries</b><br>
@@ -481,6 +487,8 @@ kubectl exec -it $(kubectl get pods -l app=ragpython -o jsonpath='{.items[0].met
 <a href="https://github.com/alaasalmo/ollama-rag-kubernetes/blob/main/script/advanced-rag-example8.py">advanced-rag-example8.py</a> <b>(Advanced RAG implementation)</b>
 
 Advanced RAG through rewrite query
+
+Explanation: the file advanced-rag-example8.py consist of:
 
 <b>Step 1: Call Ollama embedding API</b><br>
 <b>Step 2: Call Ollama chat API</b><br>
