@@ -200,7 +200,7 @@ One common method is Euclidean distance, which measures the straight-line distan
 ##### Docker
 <p>
 <b>A. Build Ollama docker</b>
-   In the our previos post, we built the Ollama docker <a href="https://github.com/alaasalmo/ollama-kubernetes/tree/main/ollama">Build Ollama docker</a>
+   In the our previous article, we built the Ollama docker <a href="https://github.com/alaasalmo/ollama-kubernetes/tree/main/ollama">Build Ollama docker</a>
 </p>
 <p>
 <b>B. Build ChromaDB docker</b>
